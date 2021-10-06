@@ -1,1 +1,54 @@
+"""
+Created on Thu Sep 16 19:42:54 2021
+
+@author: jayas
+"""
+
+
+import numpy as np
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import make_column_transformer
+from sklearn.compose import ColumnTransformer
+import pandas as pd
+from sklearn.model_selection import train_test_split
+dataset = pd.read_csv('bank.csv')
+print(dataset.info)
+d=dataset.isnull().any()
+print(d)
+
+
+
+
+dataset.drop("education",1, inplace=True)
+dataset.drop("default",1, inplace=True)
+dataset.drop("day",1, inplace=True)
+dataset.drop("month",1, inplace=True)
+dataset.drop("duration",1, inplace=True)
+
+
+u =dataset.iloc[:,0:5]
+v= dataset.iloc[:,6:12]
+x=pd.concat([u,v],axis=1, join="outer")  
+y = dataset.iloc[:,5:6]
+
+
+
+x = x.values
+y = y.values
+
+print(x.shape)
+
+ct = ColumnTransformer([("one",OneHotEncoder(),[1,2,4,5,9,10])],remainder = "passthrough")
+x = ct.fit_transform(x)
+
+print(x.shape)
+
+
+
+x_train,x_test,y_train,y_test = train_test_split(x,y,test_size = 0.2,random_state = 0)
+
+
+sc = StandardScaler()
+x_train = sc.fit_transform(x_train)
+print(x_train)
 
